@@ -1,0 +1,12 @@
+#searchListDiv{
+    height:500px;
+    overflow:hidden;
+}
+#searchList{
+    margin-top:16px;
+    height:400px;
+    overflow:scroll;
+}
+#pagination{
+    height: 80px;
+}
