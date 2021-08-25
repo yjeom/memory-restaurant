@@ -7,6 +7,7 @@
 <script type="text/javascript"
         src="//dapi.kakao.com/v2/maps/sdk.js?appkey=24bdbe8834b5acfa0064eb1655f32353&libraries=services,clusterer,drawing">
 </script>
+<script type="text/javascript" src="js/main.js"></script>
 <script>
 // 마커를 담을 배열입니다
 var markers = [];
@@ -124,9 +125,14 @@ function displayPlaces(places) {
     map.setBounds(bounds);
 
 }
-    var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
 function writePlace(name,x,y){
     document.getElementById('staticBackdropLabel').innerHTML=name;
+
+    var str='<input type="hidden" id="place_name" name="place_name" value="'+name+'">'
+            +'<input type="hidden" id="position_x" name="position_x" value="'+x+'">'
+            +'<input type="hidden" id="position_y" name="position_y" value="'+y+'">';
+    document.getElementById('placeInformation').innerHTML=str;
     myModal.toggle();
 
 }
