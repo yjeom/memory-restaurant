@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 public class PlacesSaveRequestDto {
     private String place_name;
     private String content;
-    private String position_x;
-    private String position_y;
+    private double position_x;
+    private double position_y;
 
     @Builder
-    public PlacesSaveRequestDto(String place_name,String content,String position_x,String position_y){
+    public PlacesSaveRequestDto(String place_name,String content,double position_x,double position_y){
         this.place_name=place_name;
         this.content=content;
         this.position_x=position_x;

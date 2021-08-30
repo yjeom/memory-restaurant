@@ -21,14 +21,14 @@ public class Places {
     @Column(columnDefinition = "TEXT",nullable = false)
     private String content;
 
-    @Column(length = 500,nullable = false)
-    private String position_x;
+    @Column(nullable = false)
+    private double position_x;
 
-    @Column(length = 500,nullable = false)
-    private String position_y;
+    @Column(nullable = false)
+    private double position_y;
 
     @Builder
-    public Places(String place_name,String content,String position_x,String position_y){
+    public Places(String place_name,String content,double position_x,double position_y){
         this.place_name=place_name;
         this.content=content;
         this.position_x=position_x;

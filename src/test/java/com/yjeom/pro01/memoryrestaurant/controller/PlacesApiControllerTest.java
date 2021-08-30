@@ -41,8 +41,8 @@ public class PlacesApiControllerTest {
     public void Places_등록하다() throws Exception{
         String place_name="명동 교자";
         String content="맛있어요!";
-        String position_x="126.98561429978552";
-        String position_y="37.56255453417897";
+        double position_x=126.98561429978552;
+        double position_y=37.56255453417897;
         PlacesSaveRequestDto requestDto = PlacesSaveRequestDto.builder()
                 .place_name(place_name)
                 .content(content)
