@@ -14,4 +14,11 @@ public interface PlacesRepository extends JpaRepository<Places,Long> {
             "ORDER BY p.id DESC",nativeQuery = true)
     List<Places> findALLDesc(@Param("sw_x")double sw_x,@Param("sw_y")double sw_y,
                              @Param("ne_x")double ne_x,@Param("ne_y")double ne_y);
+
+    @Query(value = "SELECT p.* FROM PLACES p "
+            +"WHERE p.position_x = :position_x "
+            +"AND p.position_y= :position_y "
+            +"LIMIT 1"
+            ,nativeQuery = true)
+    Places findByPosition(@Param("position_x")double position_x, @Param("position_y") double position_y);
 }

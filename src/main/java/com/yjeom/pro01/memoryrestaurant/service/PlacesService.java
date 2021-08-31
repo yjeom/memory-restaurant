@@ -25,4 +25,9 @@ public class PlacesService {
         return placesRepository.findALLDesc(data.get("sw_x"),data.get("sw_y")
         ,data.get("ne_x"),data.get("ne_y"));
     }
+
+    @Transactional
+    public Places get(double position_x,double position_y){
+        return placesRepository.findByPosition(position_x,position_y);
+    }
 }
