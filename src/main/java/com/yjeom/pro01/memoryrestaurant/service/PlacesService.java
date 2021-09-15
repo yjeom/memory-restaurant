@@ -3,6 +3,7 @@ package com.yjeom.pro01.memoryrestaurant.service;
 import com.yjeom.pro01.memoryrestaurant.domain.Places;
 import com.yjeom.pro01.memoryrestaurant.domain.PlacesRepository;
 import com.yjeom.pro01.memoryrestaurant.dto.PlacesSaveRequestDto;
+import com.yjeom.pro01.memoryrestaurant.dto.PlacesUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,13 @@ public class PlacesService {
     @Transactional
     public Places get(double position_x,double position_y){
         return placesRepository.findByPosition(position_x,position_y);
+    }
+
+    @Transactional
+    public Long update(Long id, PlacesUpdateRequestDto requestDto){
+        Places places=placesRepository.findById(id)
+                .orElseThrow(()->new IllegalArgumentException("해당 내역이 존재하지 않습니다."));
+        places.update(requestDto.getContent());
+        return id;
     }
 }

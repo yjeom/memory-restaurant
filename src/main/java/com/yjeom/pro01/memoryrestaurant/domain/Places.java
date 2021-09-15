@@ -34,4 +34,8 @@ public class Places {
         this.position_x=position_x;
         this.position_y=position_y;
     }
+
+    public void update(String content){
+        this.content=content;
+    }
 }

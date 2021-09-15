@@ -123,15 +123,27 @@ function displayPlaces(places) {
     map.setBounds(bounds);
 
 }
-
-var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+    var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
 // 음식점 메모 기록창 열기
 function writePlace(name,x,y){
+    var placeMemo=findPlace(x,y);
     document.getElementById('staticBackdropLabel').innerHTML=name;
-    document.getElementById('content').innerHTML='';
+    if(placeMemo==''){
+        document.getElementById('content').value='';
+        document.getElementById('placesUpdateBtn').style.display='none';
+        document.getElementById('placesSaveBtn').style.display='block';
+    }else{
+        document.getElementById('content').value=placeMemo.content;
+        document.getElementById('placesSaveBtn').style.display='none';
+        document.getElementById('placesUpdateBtn').style.display='block';
+    }
     var str='<input type="hidden" id="place_name" name="place_name" value="'+name+'">'
             +'<input type="hidden" id="position_x" name="position_x" value="'+x+'">'
             +'<input type="hidden" id="position_y" name="position_y" value="'+y+'">';
+        if(placeMemo!=''){
+            str +='<input type="hidden" id="id" name="id" value="'+placeMemo.id+'">';
+        }
+
     document.getElementById('placeInformation').innerHTML=str;
     myModal.toggle();
 
@@ -153,7 +165,8 @@ function getListItem(index, places) {
                 '<div class="info">' +
                 '   <h5>' + places.place_name +
                 '<button type="button" class="btn btn-sm btn-success" '
-                +'onclick="writePlace(\''+places.place_name+'\','+places.y+','+places.x+');">기록조회</button>'
+                +'onclick="writePlace(\''+placeMemo.place_name+'\','+
+                placeMemo.position_x+','+placeMemo.position_y+');">기록조회</button>'
                 + '</h5>';
     }
 

@@ -1,6 +1,7 @@
 package com.yjeom.pro01.memoryrestaurant.controller;
 import com.yjeom.pro01.memoryrestaurant.domain.Places;
 import com.yjeom.pro01.memoryrestaurant.dto.PlacesSaveRequestDto;
+import com.yjeom.pro01.memoryrestaurant.dto.PlacesUpdateRequestDto;
 import com.yjeom.pro01.memoryrestaurant.service.PlacesService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
@@ -40,6 +41,11 @@ public class PlacesApiController {
     @GetMapping  ("/api/v1/{position_x}/{position_y}")
     public Places get(@PathVariable double position_x,@PathVariable double position_y){
         return placesService.get(position_x,position_y);
+    }
 
+    @PutMapping("api/v1/places/{id}")
+    public Long update(@PathVariable Long id,@RequestBody PlacesUpdateRequestDto requestDto){
+        System.out.println(id+"zzzzzzzzzzz");
+        return placesService.update(id,requestDto);
     }
 }
