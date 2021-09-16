@@ -39,4 +39,12 @@ public class PlacesService {
         places.update(requestDto.getContent());
         return id;
     }
+
+    @Transactional
+    public Long delete(Long id){
+        Places places=placesRepository.findById(id)
+                .orElseThrow(()->new IllegalArgumentException("해당 내역이 존재하지 않습니다."));
+        placesRepository.delete(places);
+        return id;
+    }
 }

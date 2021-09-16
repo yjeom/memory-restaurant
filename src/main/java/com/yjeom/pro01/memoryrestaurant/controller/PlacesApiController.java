@@ -45,7 +45,12 @@ public class PlacesApiController {
 
     @PutMapping("api/v1/places/{id}")
     public Long update(@PathVariable Long id,@RequestBody PlacesUpdateRequestDto requestDto){
-        System.out.println(id+"zzzzzzzzzzz");
         return placesService.update(id,requestDto);
+    }
+
+    @DeleteMapping("api/v1/places/{id}")
+    public Long delete(@PathVariable Long id){
+        placesService.delete(id);
+        return id;
     }
 }

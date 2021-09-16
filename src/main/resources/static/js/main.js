@@ -37,3 +37,19 @@ $('#placesUpdateBtn').on('click',function(){
         console.log( "Ajax failed: " + error['responseText'] );
     });
 })
+
+$('#placesDeleteBtn').on('click',function(){
+
+    var id=$('#id').val();
+    $.ajax({
+        type:'DELETE',
+        url:'/api/v1/places/'+id,
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+    }).done(function(){
+        alert('글이 삭제되었습니다.');
+         myModal.toggle();
+    }).fail(function(error){
+        console.log( "Ajax failed: " + error['responseText'] );
+    });
+})
