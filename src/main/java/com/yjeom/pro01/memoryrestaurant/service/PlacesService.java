@@ -1,14 +1,16 @@
 package com.yjeom.pro01.memoryrestaurant.service;
 
 import com.yjeom.pro01.memoryrestaurant.domain.Places;
-import com.yjeom.pro01.memoryrestaurant.domain.PlacesRepository;
+import com.yjeom.pro01.memoryrestaurant.repository.PlacesRepository;
 import com.yjeom.pro01.memoryrestaurant.dto.PlacesSaveRequestDto;
 import com.yjeom.pro01.memoryrestaurant.dto.PlacesUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -21,10 +23,21 @@ public class PlacesService {
         return placesRepository.save(requestDto.toEntity()).getId();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Places> getList(HashMap<String,Double> data){
-        return placesRepository.findALLDesc(data.get("sw_x"),data.get("sw_y")
-        ,data.get("ne_x"),data.get("ne_y"));
+        List<Places> list=placesRepository.getBoundPlaceList(data.get("sw_x"),data.get("sw_y")
+                ,data.get("ne_x"),data.get("ne_y"));
+        List<String> duplication=new ArrayList<>();
+        if(!list.isEmpty()){
+            for(int i=0;i<list.size();i++){
+                if(duplication.contains(list.get(i).getPlace_name())){
+                    list.remove(i);
+                }else{
+                    duplication.add(list.get(i).getPlace_name());
+                }
+            }
+        }
+        return list;
     }
 
     @Transactional

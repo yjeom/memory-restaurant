@@ -17,17 +17,61 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 // 지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
 
+hello();
+
 //별표 마커 생성하기
 function startMarkerCreate(x,y,place_name){
-   // 마커를 생성합니다
-            var marker = new kakao.maps.Marker({
-                map: map, // 마커를 표시할 지도
-                position: new kakao.maps.LatLng(x, y), // 마커를 표시할 위치
-                title : place_name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-                image : markerImage // 마커 이미지
-            });
+
+    var marker = new kakao.maps.Marker({
+        map: map, // 마커를 표시할 지도
+        position: new kakao.maps.LatLng(x, y), // 마커를 표시할 위치
+        title : place_name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+        image : markerImage // 마커 이미지
+    });
+     // 마커에 클릭이벤트를 등록합니다
+        kakao.maps.event.addListener(marker, 'click', function() {
+//            // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+//            infowindow.setContent('<div style="padding:5px;font-size:12px;">'+ place_name + '</div>');
+//            infowindow.open(map, marker);
+            placeMarkerClick(x,y,place_name);
+        });
 }
 
+function hello(){
+// 정상적으로 검색이 완료됐으면 검색 목록과 마커를 표출합니다
+        var bounds = map.getBounds();
+        // 영역의 남서쪽 좌표를 얻어옵니다
+        var swLatLng = bounds.getSouthWest();
+        // 영역의 북동쪽 좌표를 얻어옵니다
+        var neLatLng = bounds.getNorthEast();
+
+        var boundData={
+            sw_x:swLatLng.getLat(),
+            sw_y:swLatLng.getLng(),
+            ne_x:neLatLng.getLat(),
+            ne_y:neLatLng.getLng()
+        };
+         $.ajax({
+            type:'POST',
+            url:'/',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(boundData),
+        }).done(function(data){
+            for (var i = 0; i < data.length; i ++) {
+               startMarkerCreate(data[i].position_x,data[i].position_y,data[i].place_name);
+
+            }
+        }).fail(function(error){
+            console.log( "Ajax failed: " + error['responseText'] );
+        });
+}
+
+function placeMarkerClick(x,y,place_name){
+     document.getElementById('searchListDiv').style.display='none';
+     document.getElementById('placeMemoListDiv').style.display='block';
+     document.getElementById('placeTitle').innerHTML=place_name;
+}
 // 장소 검색 객체를 생성합니다
 var ps = new kakao.maps.services.Places();
 
@@ -49,11 +93,11 @@ function searchPlaces() {
 }
 
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
-function placesSearchCB(data, status, pagination) {
+function placesSearchCB(searchData, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
 
-        // 정상적으로 검색이 완료됐으면 검색 목록과 마커를 표출합니다
-        displayPlaces(data);
+
+        displayPlaces(searchData);
 
         // 페이지 번호를 표출합니다
         displayPagination(pagination);

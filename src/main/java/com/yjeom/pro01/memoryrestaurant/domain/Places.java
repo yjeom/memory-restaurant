@@ -1,13 +1,17 @@
 package com.yjeom.pro01.memoryrestaurant.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
+@Table(name="places")
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Places {
 
@@ -38,4 +42,5 @@ public class Places {
     public void update(String content){
         this.content=content;
     }
+
 }

@@ -1,8 +1,7 @@
 package com.yjeom.pro01.memoryrestaurant.controller;
 
-import com.sun.net.httpserver.HttpsServer;
 import com.yjeom.pro01.memoryrestaurant.domain.Places;
-import com.yjeom.pro01.memoryrestaurant.domain.PlacesRepository;
+import com.yjeom.pro01.memoryrestaurant.repository.PlacesRepository;
 import com.yjeom.pro01.memoryrestaurant.dto.PlacesSaveRequestDto;
 import org.junit.After;
 import org.junit.Test;

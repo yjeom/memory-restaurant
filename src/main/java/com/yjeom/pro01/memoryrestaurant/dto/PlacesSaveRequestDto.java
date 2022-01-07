@@ -4,8 +4,10 @@ import com.yjeom.pro01.memoryrestaurant.domain.Places;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class PlacesSaveRequestDto {
     private String place_name;
