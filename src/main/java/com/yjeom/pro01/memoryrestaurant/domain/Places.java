@@ -20,23 +20,23 @@ public class Places {
     private Long id;
 
     @Column(length = 500,nullable = false)
-    private String place_name;
+    private String placeName;
 
     @Column(columnDefinition = "TEXT",nullable = false)
     private String content;
 
     @Column(nullable = false)
-    private double position_x;
+    private double positionX;
 
     @Column(nullable = false)
-    private double position_y;
+    private double positionY;
 
     @Builder
-    public Places(String place_name,String content,double position_x,double position_y){
-        this.place_name=place_name;
+    public Places(String placeName,String content,double positionX,double positionY){
+        this.placeName=placeName;
         this.content=content;
-        this.position_x=position_x;
-        this.position_y=position_y;
+        this.positionX=positionX;
+        this.positionY=positionY;
     }
 
     public void update(String content){

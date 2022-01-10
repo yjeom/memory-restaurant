@@ -10,9 +10,11 @@ import java.util.List;
 public interface PlacesRepository extends JpaRepository<Places,Long> , PlacesRepositoryCustom{
 
     @Query(value = "SELECT p.* FROM PLACES p "
-            +"WHERE p.position_x = :position_x "
-            +"AND p.position_y= :position_y "
+            +"WHERE p.positionX = :positionX "
+            +"AND p.positionY= :positionY "
             +"LIMIT 1"
             ,nativeQuery = true)
-    Places findByPosition(@Param("position_x")double position_x, @Param("position_y") double position_y);
+    Places findByPosition(@Param("positionX")double positionX, @Param("positionY") double positionY);
+
+    List<Places> findByPositionXAndPositionY(double positionX,double positionY);
 }

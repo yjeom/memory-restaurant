@@ -30,19 +30,19 @@ public class PlacesService {
         List<String> duplication=new ArrayList<>();
         if(!list.isEmpty()){
             for(int i=0;i<list.size();i++){
-                if(duplication.contains(list.get(i).getPlace_name())){
+                if(duplication.contains(list.get(i).getPlaceName())){
                     list.remove(i);
                 }else{
-                    duplication.add(list.get(i).getPlace_name());
+                    duplication.add(list.get(i).getPlaceName());
                 }
             }
         }
         return list;
     }
 
-    @Transactional
-    public Places get(double position_x,double position_y){
-        return placesRepository.findByPosition(position_x,position_y);
+    @Transactional(readOnly = true)
+    public List<Places> getList(double positionX,double positionY){
+        return placesRepository.findByPositionXAndPositionY(positionX,positionY);
     }
 
     @Transactional

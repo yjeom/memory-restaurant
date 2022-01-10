@@ -20,12 +20,12 @@ var map = new kakao.maps.Map(mapContainer, mapOption);
 hello();
 
 //별표 마커 생성하기
-function startMarkerCreate(x,y,place_name){
+function startMarkerCreate(x,y,placeName){
 
     var marker = new kakao.maps.Marker({
         map: map, // 마커를 표시할 지도
         position: new kakao.maps.LatLng(x, y), // 마커를 표시할 위치
-        title : place_name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+        title : placeName, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
         image : markerImage // 마커 이미지
     });
      // 마커에 클릭이벤트를 등록합니다
@@ -33,7 +33,7 @@ function startMarkerCreate(x,y,place_name){
 //            // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
 //            infowindow.setContent('<div style="padding:5px;font-size:12px;">'+ place_name + '</div>');
 //            infowindow.open(map, marker);
-            placeMarkerClick(x,y,place_name);
+            placeMarkerClick(x,y,placeName);
         });
 }
 
@@ -59,7 +59,7 @@ function hello(){
             data: JSON.stringify(boundData),
         }).done(function(data){
             for (var i = 0; i < data.length; i ++) {
-               startMarkerCreate(data[i].position_x,data[i].position_y,data[i].place_name);
+               startMarkerCreate(data[i].positionX,data[i].positionY,data[i].placeName);
 
             }
         }).fail(function(error){
@@ -67,10 +67,20 @@ function hello(){
         });
 }
 
-function placeMarkerClick(x,y,place_name){
+function placeMarkerClick(x,y,placeName){
      document.getElementById('searchListDiv').style.display='none';
      document.getElementById('placeMemoListDiv').style.display='block';
-     document.getElementById('placeTitle').innerHTML=place_name;
+     document.getElementById('placeTitle').innerHTML=placeName;
+
+      $.ajax({
+            type:'GET',
+            url:'/api/v1/'+x+'/'+y,
+        }).done(function(data){
+            console.log(data);
+            result=data;
+        }).fail(function(request, status, error){
+            console.log( "code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        });
 }
 // 장소 검색 객체를 생성합니다
 var ps = new kakao.maps.services.Places();
@@ -161,7 +171,7 @@ function displayPlaces(places) {
             itemEl.onmouseout =  function () {
                 infowindow.close();
             };
-        })(marker, places[i].place_name);
+        })(marker, places[i].placeName);
 
         fragment.appendChild(itemEl);
     }
@@ -190,9 +200,9 @@ function writePlace(name,x,y){
         document.getElementById('placesUpdateBtn').style.display='block';
         document.getElementById('placesDeleteBtn').style.display='block';
     }
-    var str='<input type="hidden" id="place_name" name="place_name" value="'+name+'">'
-            +'<input type="hidden" id="position_x" name="position_x" value="'+x+'">'
-            +'<input type="hidden" id="position_y" name="position_y" value="'+y+'">';
+    var str='<input type="hidden" id="placeName" name="placeName" value="'+name+'">'
+            +'<input type="hidden" id="positionX" name="positionX" value="'+x+'">'
+            +'<input type="hidden" id="positionY" name="positionY" value="'+y+'">';
         if(placeMemo!=''){
             str +='<input type="hidden" id="id" name="id" value="'+placeMemo.id+'">';
         }
@@ -205,7 +215,7 @@ function writePlace(name,x,y){
 function getListItem(index, places) {
 
     var el = document.createElement('li');
-    var placeMemo=findPlace(places.y,places.x);
+    var placeMemo='';
     if(placeMemo==''){
      itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                 '<div class="info">' +
@@ -216,10 +226,10 @@ function getListItem(index, places) {
     }else{
      itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                 '<div class="info">' +
-                '   <h5>' + places.place_name +
+                '   <h5>' + places.placeName +
                 '<button type="button" class="btn btn-sm btn-success" '
-                +'onclick="writePlace(\''+placeMemo.place_name+'\','+
-                placeMemo.position_x+','+placeMemo.position_y+');">기록조회</button>'
+                +'onclick="writePlace(\''+placeMemo.placeName+'\','+
+                placeMemo.positionX+','+placeMemo.positionY+');">기록조회</button>'
                 + '</h5>';
     }
 
@@ -341,7 +351,7 @@ kakao.maps.event.addListener(map, 'dragend', function() {
         data: JSON.stringify(data),
     }).done(function(data){
         for (var i = 0; i < data.length; i ++) {
-           startMarkerCreate(data[i].position_x,data[i].position_y,data[i].place_name);
+           startMarkerCreate(data[i].positionX,data[i].positionY,data[i].placeName);
 
         }
     }).fail(function(error){

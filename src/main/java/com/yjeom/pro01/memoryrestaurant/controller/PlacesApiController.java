@@ -38,9 +38,9 @@ public class PlacesApiController {
     }
 
     @ResponseBody
-    @GetMapping  ("/api/v1/{position_x}/{position_y}")
-    public Places get(@PathVariable double position_x,@PathVariable double position_y){
-        return placesService.get(position_x,position_y);
+    @GetMapping  ("/api/v1/{positionX}/{positionY}")
+    public List<Places> get(@PathVariable double positionX,@PathVariable double positionY){
+        return placesService.getList(positionX,positionY);
     }
 
     @PutMapping("api/v1/places/{id}")

@@ -1,9 +1,9 @@
 $('#placesSaveBtn').on('click',function(){
     var data={
-        place_name:$('#place_name').val(),
+        placeName:$('#placeName').val(),
         content:$('#content').val(),
-        position_x:$('#position_x').val(),
-        position_y:$('#position_y').val(),
+        positionX:$('#positionX').val(),
+        positionY:$('#positionY').val(),
     };
     $.ajax({
         type:'POST',
@@ -14,7 +14,7 @@ $('#placesSaveBtn').on('click',function(){
     }).done(function(){
         alert('글이 등록되었습니다.');
          myModal.toggle();
-         startMarkerCreate(data.position_x,data.position_y,data.place_name);
+         startMarkerCreate(data.positionX,data.positionY,data.placeName);
     }).fail(function(error){
         console.log( "Ajax failed: " + error['responseText'] );
     });

@@ -22,8 +22,8 @@ public class PlacesRepositoryCustomImpl implements PlacesRepositoryCustom{
     public List<Places> getBoundPlaceList(double sw_x, double sw_y, double ne_x, double ne_y) {
         QPlaces places= QPlaces.places;
         List<Places> content=queryFactory.selectFrom(places)
-                .where(places.position_x.between(sw_x,ne_x)
-                        ,places.position_y.between(sw_y,ne_y))
+                .where(places.positionX.between(sw_x,ne_x)
+                        ,places.positionY.between(sw_y,ne_y))
                 .orderBy(places.id.desc())
                 .fetch();
 

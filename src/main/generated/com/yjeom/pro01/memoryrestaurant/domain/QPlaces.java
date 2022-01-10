@@ -23,11 +23,11 @@ public class QPlaces extends EntityPathBase<Places> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath place_name = createString("place_name");
+    public final StringPath placeName = createString("placeName");
 
-    public final NumberPath<Double> position_x = createNumber("position_x", Double.class);
+    public final NumberPath<Double> positionX = createNumber("positionX", Double.class);
 
-    public final NumberPath<Double> position_y = createNumber("position_y", Double.class);
+    public final NumberPath<Double> positionY = createNumber("positionY", Double.class);
 
     public QPlaces(String variable) {
         super(Places.class, forVariable(variable));

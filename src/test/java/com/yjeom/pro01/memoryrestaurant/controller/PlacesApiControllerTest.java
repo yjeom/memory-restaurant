@@ -38,15 +38,15 @@ public class PlacesApiControllerTest {
 
     @Test
     public void Places_등록하다() throws Exception{
-        String place_name="명동 교자";
+        String placeName="명동 교자";
         String content="맛있어요!";
-        double position_x=126.98561429978552;
-        double position_y=37.56255453417897;
+        double positionX=126.98561429978552;
+        double positionY=37.56255453417897;
         PlacesSaveRequestDto requestDto = PlacesSaveRequestDto.builder()
-                .place_name(place_name)
+                .placeName(placeName)
                 .content(content)
-                .position_x(position_x)
-                .position_y(position_y)
+                .positionX(positionX)
+                .positionY(positionY)
                 .build();
         String url="http://localhost:"+port+"/api/v1/places";
 
@@ -55,7 +55,7 @@ public class PlacesApiControllerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
         List<Places> all= placesRepository.findAll();
-        assertThat(all.get(0).getPlace_name()).isEqualTo(place_name);
+        assertThat(all.get(0).getPlaceName()).isEqualTo(placeName);
         assertThat(all.get(0).getContent()).isEqualTo(content);
     }
 }
