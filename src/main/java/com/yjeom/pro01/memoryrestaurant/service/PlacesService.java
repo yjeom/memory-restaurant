@@ -5,6 +5,8 @@ import com.yjeom.pro01.memoryrestaurant.repository.PlacesRepository;
 import com.yjeom.pro01.memoryrestaurant.dto.PlacesSaveRequestDto;
 import com.yjeom.pro01.memoryrestaurant.dto.PlacesUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,8 +43,8 @@ public class PlacesService {
     }
 
     @Transactional(readOnly = true)
-    public List<Places> getList(double positionX,double positionY){
-        return placesRepository.findByPositionXAndPositionY(positionX,positionY);
+    public Page<Places> getList(double positionX, double positionY, Pageable pageable){
+        return placesRepository.findByPositionXAndPositionYOrderByIdDesc(positionX,positionY,pageable);
     }
 
     @Transactional

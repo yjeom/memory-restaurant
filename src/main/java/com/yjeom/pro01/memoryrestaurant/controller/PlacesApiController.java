@@ -6,10 +6,14 @@ import com.yjeom.pro01.memoryrestaurant.service.PlacesService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -38,9 +42,12 @@ public class PlacesApiController {
     }
 
     @ResponseBody
-    @GetMapping  ("/api/v1/{positionX}/{positionY}")
-    public List<Places> get(@PathVariable double positionX,@PathVariable double positionY){
-        return placesService.getList(positionX,positionY);
+    @GetMapping  ("/api/v1/{positionX}/{positionY}/{page}")
+    public Page<Places> get(@PathVariable double positionX, @PathVariable double positionY
+            , @PathVariable Optional<Integer> page){
+        Pageable pageable= PageRequest.of(page.isPresent()?page.get():0,3);
+
+        return placesService.getList(positionX,positionY,pageable);
     }
 
     @PutMapping("api/v1/places/{id}")

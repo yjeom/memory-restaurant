@@ -1,6 +1,8 @@
 package com.yjeom.pro01.memoryrestaurant.repository;
 
 import com.yjeom.pro01.memoryrestaurant.domain.Places;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,5 +18,5 @@ public interface PlacesRepository extends JpaRepository<Places,Long> , PlacesRep
             ,nativeQuery = true)
     Places findByPosition(@Param("positionX")double positionX, @Param("positionY") double positionY);
 
-    List<Places> findByPositionXAndPositionY(double positionX,double positionY);
+    Page<Places> findByPositionXAndPositionYOrderByIdDesc(double positionX, double positionY, Pageable pageable);
 }

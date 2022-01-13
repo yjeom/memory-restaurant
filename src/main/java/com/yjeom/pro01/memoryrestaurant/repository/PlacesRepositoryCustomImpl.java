@@ -1,15 +1,11 @@
 package com.yjeom.pro01.memoryrestaurant.repository;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.yjeom.pro01.memoryrestaurant.domain.Places;
 import com.yjeom.pro01.memoryrestaurant.domain.QPlaces;
 
 import javax.persistence.EntityManager;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class PlacesRepositoryCustomImpl implements PlacesRepositoryCustom{
 

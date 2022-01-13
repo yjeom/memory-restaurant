@@ -17,7 +17,7 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 // 지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
 
-hello();
+getBoundMarkers();
 
 //별표 마커 생성하기
 function startMarkerCreate(x,y,placeName){
@@ -30,14 +30,11 @@ function startMarkerCreate(x,y,placeName){
     });
      // 마커에 클릭이벤트를 등록합니다
         kakao.maps.event.addListener(marker, 'click', function() {
-//            // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-//            infowindow.setContent('<div style="padding:5px;font-size:12px;">'+ place_name + '</div>');
-//            infowindow.open(map, marker);
-            placeMarkerClick(x,y,placeName);
+            placeMarkerClick(x,y,placeName,0);
         });
 }
 
-function hello(){
+function getBoundMarkers(){
 // 정상적으로 검색이 완료됐으면 검색 목록과 마커를 표출합니다
         var bounds = map.getBounds();
         // 영역의 남서쪽 좌표를 얻어옵니다
@@ -66,22 +63,59 @@ function hello(){
             console.log( "Ajax failed: " + error['responseText'] );
         });
 }
+function placeMemoPagination(x,y,placeName,curPage,totalPages){
+    let pageListSize=3;
+    let startPageNumber=curPage-(curPage%pageListSize)+1;
+    let endPageNumber=curPage-(curPage%pageListSize)+pageListSize;
+    if(endPageNumber>totalPages){
+        endPageNumber=totalPages;
+    }
+    console.log("$:"+(curPage%pageListSize));
+    console.log("##:"+curPage+"/"+startPageNumber+"~"+endPageNumber);
 
-function placeMarkerClick(x,y,placeName){
+    let pagination='';
+    if(curPage==1){
+        pagination +='<li class="page-item disabled"><a class="page-link">Previous<a></li>';
+    }else{
+         pagination +='<li class="page-item " onclick="placeMarkerClick('
+                        +x+','+y+',\''+placeName+'\','+(curPage-1)+');"><a class="page-link">Previous<a></li>';
+    }
+    for(var i=startPageNumber;i<=endPageNumber;i++){
+        pagination+='<li class="page-item" onclick="placeMarkerClick('
+                     +x+','+y+',\''+placeName+'\','+(i-1)+');"><a class="page-link">'+i+'<a></li>';
+    }
+    if(curPage+1>=totalPages){
+        pagination +='<li class="page-item disabled"><a class="page-link">Next<a></li>';
+    }else{
+         pagination +='<li class="page-item " onclick="placeMarkerClick('
+                                 +x+','+y+',\''+placeName+'\','
+                                 +(curPage+1)+');"><a class="page-link">Next<a></li>';
+    }
+    document.getElementById('placeMemoListPaginationUl').innerHTML=pagination;
+}
+function placeMarkerClick(x,y,placeName,page){
      document.getElementById('searchListDiv').style.display='none';
      document.getElementById('placeMemoListDiv').style.display='block';
      document.getElementById('placeTitle').innerHTML=placeName;
 
       $.ajax({
             type:'GET',
-            url:'/api/v1/'+x+'/'+y,
+            url:'/api/v1/'+x+'/'+y+'/'+page,
         }).done(function(data){
-            console.log(data);
-            result=data;
+            let arr=data.content;
+            let list='';
+            for(var i=0;i<arr.length;i++){
+                list +='<li class="list-group-item">'+arr[i].content+'</li>'
+            }
+            document.getElementById('placeMemoListUl').innerHTML=list;
+
+            placeMemoPagination(x,y,placeName,data.pageable.pageNumber,data.totalPages)
+
         }).fail(function(request, status, error){
             console.log( "code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
         });
 }
+
 // 장소 검색 객체를 생성합니다
 var ps = new kakao.maps.services.Places();
 
@@ -281,7 +315,7 @@ function removeMarker() {
 
 // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
 function displayPagination(pagination) {
-    var paginationEl = document.getElementById('pagination'),
+    var paginationEl = document.getElementById('searchListPagination'),
         fragment = document.createDocumentFragment(),
         i;
 
