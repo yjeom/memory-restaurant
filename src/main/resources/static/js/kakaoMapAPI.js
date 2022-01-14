@@ -16,7 +16,14 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 
 // 지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
+function setCenter(x,y) {
+    // 이동할 위도 경도 위치를 생성합니다
+    var moveLatLon = new kakao.maps.LatLng(x, y);
 
+    // 지도 중심을 이동 시킵니다
+    map.setCenter(moveLatLon);
+    getBoundMarkers();
+}
 getBoundMarkers();
 
 //별표 마커 생성하기
@@ -32,6 +39,7 @@ function startMarkerCreate(x,y,placeName){
         kakao.maps.event.addListener(marker, 'click', function() {
             placeMarkerClick(x,y,placeName,0);
         });
+
 }
 
 function getBoundMarkers(){
@@ -57,7 +65,6 @@ function getBoundMarkers(){
         }).done(function(data){
             for (var i = 0; i < data.length; i ++) {
                startMarkerCreate(data[i].positionX,data[i].positionY,data[i].placeName);
-
             }
         }).fail(function(error){
             console.log( "Ajax failed: " + error['responseText'] );
@@ -70,11 +77,9 @@ function placeMemoPagination(x,y,placeName,curPage,totalPages){
     if(endPageNumber>totalPages){
         endPageNumber=totalPages;
     }
-    console.log("$:"+(curPage%pageListSize));
-    console.log("##:"+curPage+"/"+startPageNumber+"~"+endPageNumber);
 
     var pagination='';
-    if(curPage==1){
+    if(curPage==0){
         pagination +='<li class="page-item disabled"><a class="page-link">Previous<a></li>';
     }else{
          pagination +='<li class="page-item " onclick="placeMarkerClick('

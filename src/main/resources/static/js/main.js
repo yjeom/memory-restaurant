@@ -14,7 +14,8 @@ $('#placesSaveBtn').on('click',function(){
     }).done(function(){
         alert('글이 등록되었습니다.');
          myModal.toggle();
-         startMarkerCreate(data.positionX,data.positionY,data.placeName);
+         setCenter(data.positionX,data.positionY);
+
     }).fail(function(error){
         console.log( "Ajax failed: " + error['responseText'] );
     });
