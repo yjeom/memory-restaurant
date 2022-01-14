@@ -64,16 +64,16 @@ function getBoundMarkers(){
         });
 }
 function placeMemoPagination(x,y,placeName,curPage,totalPages){
-    let pageListSize=3;
-    let startPageNumber=curPage-(curPage%pageListSize)+1;
-    let endPageNumber=curPage-(curPage%pageListSize)+pageListSize;
+    var pageListSize=3;
+    var startPageNumber=curPage-(curPage%pageListSize)+1;
+    var endPageNumber=curPage-(curPage%pageListSize)+pageListSize;
     if(endPageNumber>totalPages){
         endPageNumber=totalPages;
     }
     console.log("$:"+(curPage%pageListSize));
     console.log("##:"+curPage+"/"+startPageNumber+"~"+endPageNumber);
 
-    let pagination='';
+    var pagination='';
     if(curPage==1){
         pagination +='<li class="page-item disabled"><a class="page-link">Previous<a></li>';
     }else{
@@ -93,6 +93,7 @@ function placeMemoPagination(x,y,placeName,curPage,totalPages){
     }
     document.getElementById('placeMemoListPaginationUl').innerHTML=pagination;
 }
+//마커를 클릭했을 경우 그 장소에 대한 후기 리스트를 보여준다
 function placeMarkerClick(x,y,placeName,page){
      document.getElementById('searchListDiv').style.display='none';
      document.getElementById('placeMemoListDiv').style.display='block';
@@ -102,8 +103,8 @@ function placeMarkerClick(x,y,placeName,page){
             type:'GET',
             url:'/api/v1/'+x+'/'+y+'/'+page,
         }).done(function(data){
-            let arr=data.content;
-            let list='';
+            var arr=data.content;
+            var list='';
             for(var i=0;i<arr.length;i++){
                 list +='<li class="list-group-item">'+arr[i].content+'</li>'
             }
@@ -115,23 +116,22 @@ function placeMarkerClick(x,y,placeName,page){
             console.log( "code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
         });
 }
+// 마우스 드래그시 조회 영역안 기록 존재하는 곳 별표 마커 표시
+kakao.maps.event.addListener(map, 'dragend', function() {
+    getBoundMarkers()
+});
 
 // 장소 검색 객체를 생성합니다
 var ps = new kakao.maps.services.Places();
-
 // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
-
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
-
     var keyword = document.getElementById('searchKeyword').value;
-
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         alert('키워드를 입력해주세요!');
         return false;
     }
-
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
     ps.keywordSearch( keyword, placesSearchCB);
 }
@@ -139,23 +139,17 @@ function searchPlaces() {
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
 function placesSearchCB(searchData, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
-
-
         displayPlaces(searchData);
-
         // 페이지 번호를 표출합니다
         displayPagination(pagination);
 
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
         alert('검색 결과가 존재하지 않습니다.');
         return;
 
     } else if (status === kakao.maps.services.Status.ERROR) {
-
         alert('검색 결과 중 오류가 발생했습니다.');
         return;
-
     }
 }
 
@@ -167,7 +161,6 @@ function displayPlaces(places) {
     fragment = document.createDocumentFragment(),
     bounds = new kakao.maps.LatLngBounds(),
     listStr = '';
-
 
     // 검색 결과 목록에 추가된 항목들을 제거합니다
     removeAllChildNods(listEl);
@@ -221,7 +214,7 @@ function displayPlaces(places) {
     var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
 // 음식점 메모 기록창 열기
 function writePlace(name,x,y){
-    var placeMemo=findPlace(x,y);
+    var placeMemo='';
     document.getElementById('staticBackdropLabel').innerHTML=name;
     if(placeMemo==''){
         document.getElementById('content').value='';
@@ -249,24 +242,12 @@ function writePlace(name,x,y){
 function getListItem(index, places) {
 
     var el = document.createElement('li');
-    var placeMemo='';
-    if(placeMemo==''){
-     itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
+    var itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                 '<div class="info">' +
                 '   <h5>' + places.place_name +
                 '<button type="button" class="btn btn-sm btn-primary" '
                 +'onclick="writePlace(\''+places.place_name+'\','+places.y+','+places.x+');">기록하기</button>'
                 + '</h5>';
-    }else{
-     itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
-                '<div class="info">' +
-                '   <h5>' + places.placeName +
-                '<button type="button" class="btn btn-sm btn-success" '
-                +'onclick="writePlace(\''+placeMemo.placeName+'\','+
-                placeMemo.positionX+','+placeMemo.positionY+');">기록조회</button>'
-                + '</h5>';
-    }
-
 
     if (places.road_address_name) {
         itemStr += '    <span>' + places.road_address_name + '</span>' +
@@ -275,7 +256,7 @@ function getListItem(index, places) {
         itemStr += '    <span>' +  places.address_name  + '</span>';
     }
 
-      itemStr += '  <span class="tel">' + places.phone  + '</span>' +
+    itemStr += '  <span class="tel">' + places.phone  + '</span>' +
                 '</div>';
 
     el.innerHTML = itemStr;
@@ -315,7 +296,7 @@ function removeMarker() {
 
 // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
 function displayPagination(pagination) {
-    var paginationEl = document.getElementById('searchListPagination'),
+    var paginationEl = document.getElementById('searchListPaginationUl'),
         fragment = document.createDocumentFragment(),
         i;
 
@@ -325,21 +306,23 @@ function displayPagination(pagination) {
     }
 
     for (i=1; i<=pagination.last; i++) {
+        var elLi=document.createElement('li');
+        elLi.className='page-item';
         var el = document.createElement('a');
-        el.href = "#";
         el.innerHTML = i;
 
         if (i===pagination.current) {
-            el.className = 'on';
+            el.className = 'on page-link';
         } else {
+            el.className='page-link'
             el.onclick = (function(i) {
                 return function() {
                     pagination.gotoPage(i);
                 }
             })(i);
         }
-
-        fragment.appendChild(el);
+        elLi.appendChild(el)
+        fragment.appendChild(elLi);
     }
     paginationEl.appendChild(fragment);
 }
@@ -360,39 +343,8 @@ function removeAllChildNods(el) {
     }
 }
 
-// 마우스 드래그시 조회 영역안 기록 존재하는 곳 별표 마커 표시
-kakao.maps.event.addListener(map, 'dragend', function() {
 
-     var bounds = map.getBounds();
 
-    // 영역의 남서쪽 좌표를 얻어옵니다
-    var swLatLng = bounds.getSouthWest();
-
-    // 영역의 북동쪽 좌표를 얻어옵니다
-    var neLatLng = bounds.getNorthEast();
-
-    var data={
-        sw_x:swLatLng.getLat(),
-        sw_y:swLatLng.getLng(),
-        ne_x:neLatLng.getLat(),
-        ne_y:neLatLng.getLng()
-    };
-     $.ajax({
-        type:'POST',
-        url:'/',
-        dataType: 'json',
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(data),
-    }).done(function(data){
-        for (var i = 0; i < data.length; i ++) {
-           startMarkerCreate(data[i].positionX,data[i].positionY,data[i].placeName);
-
-        }
-    }).fail(function(error){
-        console.log( "Ajax failed: " + error['responseText'] );
-    });
-
-});
 function findPlace(x,y){
     var result;
   $.ajax({
