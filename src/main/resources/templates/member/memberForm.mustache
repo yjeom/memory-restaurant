@@ -1,17 +1,26 @@
 {{>layout/header}}
-<div class="row mt-3">
-    <form action="/member/new" method="post">
+<div class="row mt-3 ms-3">
+    <form action="/member/new" role="form" method="post" >
         <div class="form-group col-6">
             <label for="name">이름</label>
             <input type="text" name="name" class="form-control " placeholder="이름을 입력하세요.">
+            {{#nameError}}
+                <p class="fieldError">{{nameError}}</p>
+            {{/nameError}}
         </div>
         <div class="form-group col-6">
             <label for="name">이메일</label>
             <input type="email" name="email"  class="form-control" placeholder="이메일을 입력하세요.">
+            {{#emailError}}
+                <p class="fieldError">{{emailError}}</p>
+            {{/emailError}}
         </div>
         <div class="form-group col-6">
             <label for="name">비밀번호</label>
             <input type="password" name="password"  class="form-control" placeholder="비밀번호를 입력하세요.">
+            {{#passwordError}}
+                <p class="fieldError">{{passwordError}}</p>
+            {{/passwordError}}
         </div>
         <div style="text-align:center" class="col-6 mt-3">
             <button type="submit" class="btn btn-primary">회원가입</button>
@@ -19,6 +28,12 @@
     </form>
 
 </div>
-
+<script type="javascript">
+ {{#errorMessage}}
+    $(document).ready(function(){
+        alert({{errorMessage}});
+    });
+ {{/errorMessage}}
+</script>
 
 {{>layout/footer}}
