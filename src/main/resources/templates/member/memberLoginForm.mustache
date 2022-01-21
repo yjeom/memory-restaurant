@@ -1,0 +1,25 @@
+{{>layout/header}}
+<div class="row mt-3 ms-3">
+    <form action="/member/login" role="form" method="post" >
+        <div class="form-group col-6">
+            <label for="email">이메일</label>
+            <input type="email" name="email"  class="form-control" placeholder="이메일을 입력하세요.">
+        </div>
+        <div class="form-group col-6">
+            <label for="password">비밀번호</label>
+            <input type="password" name="password"  class="form-control" placeholder="비밀번호를 입력하세요.">
+        </div>
+        {{#error}}
+            <p class="fieldError">{{error}}</p>
+        {{/error}}
+        <div style="text-align:center" class="col-6 mt-3">
+            <button type="submit" class="btn btn-primary">로그인</button>
+            <button type="button" class="btn btn-primary"
+                    onclick="location.href='/member/new'">회원가입</button>
+        </div>
+    </form>
+
+</div>
+
+
+{{>layout/footer}}
