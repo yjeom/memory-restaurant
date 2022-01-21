@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RequestMapping(value = "/member")
@@ -56,14 +57,15 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @GetMapping("/login")
+    @GetMapping(value = "/login")
     public String login(){
         return "member/memberLoginForm";
     }
 
-    @GetMapping("/login/error")
+    @GetMapping(value = "/login/error")
     public String loginError(Model model){
         model.addAttribute("error","아이디 또는 비밀번호를 확인해주세요.");
         return "member/memberLoginForm";
     }
+
 }

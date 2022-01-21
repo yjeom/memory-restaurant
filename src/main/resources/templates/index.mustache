@@ -2,9 +2,19 @@
 <div class="row mt-3">
     <div class="col-6">
         <div class="col-12 ps-3 pb-3">
-            <input id="searchKeyword" type="text" class="col-9">
-            <div id="searchKeywordButton" type="button" class="col-2 btn btn-primary"
-                    onclick="searchPlaces();">검색</div>
+<!--            <input id="searchKeyword" type="text" class="col-9">-->
+<!--            <div id="searchKeywordButton" type="button" class="col-2 btn btn-primary"-->
+<!--                    onclick="searchPlaces();">검색</div>-->
+                <div class="d-flex">
+                    <div class="col-9 me-2">
+                        <input class="form-control " type="search" id="searchKeyword"
+                               placeholder="Search" aria-label="Search">
+                    </div>
+                    <button id="searchKeywordButton"
+                            onclick="searchPlaces();"
+                            class="btn btn-outline-success " type="button">검색</button>
+                </div>
+
         </div>
         <div  class="col-12 ps-3">
             <div id="map" style="width:100%; height:500px;"></div>
