@@ -219,6 +219,10 @@ function displayPlaces(places) {
     var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
 // 음식점 메모 기록창 열기
 function writePlace(name,x,y){
+    var userCheck=document.getElementById('userCheck').value;
+    if(userCheck=='false'){
+        location.href="/member/login";
+    }
     var placeMemo='';
     document.getElementById('staticBackdropLabel').innerHTML=name;
     if(placeMemo==''){

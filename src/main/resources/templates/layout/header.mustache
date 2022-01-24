@@ -7,11 +7,18 @@
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link href="/css/kakaoMap.css" rel="stylesheet" type="text/css">
     <link href="/css/main.css" rel="stylesheet" type="text/css">
+
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 </head>
 <body>
 <nav class="navbar navbar sticky-top navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">먹리스트</a>
+        <a class="navbar-brand" href="/">먹리스트</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -24,11 +31,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/member/login">Login</a>
                 </li>
+                <input type="hidden" id="userCheck" value="false">
                 {{/user}}
                 {{#user}}
                     <li class="nav-item">
                         <a class="nav-link" href="/member/logout">Logout</a>
                     </li>
+                    <input type="hidden" id="userCheck" value="true">
                 {{/user}}
                 <li class="nav-item">
                     <a class="nav-link" href="member/new">SignUp</a>
