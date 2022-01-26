@@ -36,9 +36,11 @@ $('#placesUpdateBtn').on('click',function(){
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(data)
-    }).done(function(){
+    }).done(function(data){
         alert('글이 수정되었습니다.');
-         myModal.toggle();
+        myModal.toggle();
+        var page=$('#memoCurPage').val();
+        placeMarkerClick(data.positionX,data.positionY,data.placeName,page);
     }).fail(function(error){
         console.log( "Ajax failed: " + error['responseText'] );
     });

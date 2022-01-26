@@ -53,8 +53,13 @@ public class PlacesApiController {
         return placesService.getList(positionX,positionY,pageable);
     }
 
+    @GetMapping("/api/v1/places/{id}")
+    public Places getPlace(@PathVariable Long id){
+        return placesService.getPlace(id);
+    }
+
     @PutMapping("api/v1/places/{id}")
-    public Long update(@PathVariable Long id,@RequestBody PlacesUpdateRequestDto requestDto){
+    public Places update(@PathVariable Long id,@RequestBody PlacesUpdateRequestDto requestDto){
         return placesService.update(id,requestDto);
     }
 

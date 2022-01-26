@@ -78,7 +78,7 @@ function placeMemoPagination(x,y,placeName,curPage,totalPages){
         endPageNumber=totalPages;
     }
 
-    var pagination='';
+    var pagination='<input type="hidden" id="memoCurPage" value='+curPage+'>';
     if(curPage==0){
         pagination +='<li class="page-item disabled"><a class="page-link">Previous<a></li>';
     }else{
@@ -104,6 +104,7 @@ function placeMarkerClick(x,y,placeName,page){
      document.getElementById('placeMemoListDiv').style.display='block';
      document.getElementById('placeTitle').innerHTML=placeName;
 
+     var userCheck=document.getElementById('userCheck').value;
       $.ajax({
             type:'GET',
             url:'/api/v1/'+x+'/'+y+'/'+page,
@@ -111,7 +112,14 @@ function placeMarkerClick(x,y,placeName,page){
             var arr=data.content;
             var list='';
             for(var i=0;i<arr.length;i++){
-                list +='<li class="list-group-item">'+arr[i].content+'</li>'
+                list +='<li class="list-group-item">'+arr[i].content;
+                if(userCheck==arr[i].member.id){
+                    list+='<a class="" onClick="updatePlace('+arr[i].id+')">수정하기</a>'
+                    +'<a class="" onClick="deletePlace('+arr[i].id+')">삭제하기</a>'
+
+                }
+
+                list+='</li>';
             }
             document.getElementById('placeMemoListUl').innerHTML=list;
 
@@ -223,28 +231,46 @@ function writePlace(name,x,y){
     if(userCheck=='0'){
         location.href="/member/login";
     }
-    var placeMemo='';
     document.getElementById('staticBackdropLabel').innerHTML=name;
-    if(placeMemo==''){
-        document.getElementById('content').value='';
-        document.getElementById('placesUpdateBtn').style.display='none';
-        document.getElementById('placesDeleteBtn').style.display='none';
-        document.getElementById('placesSaveBtn').style.display='block';
-    }else{
-        document.getElementById('content').value=placeMemo.content;
-        document.getElementById('placesSaveBtn').style.display='none';
-        document.getElementById('placesUpdateBtn').style.display='block';
-        document.getElementById('placesDeleteBtn').style.display='block';
-    }
+    document.getElementById('content').value='';
+    document.getElementById('placesUpdateBtn').style.display='none'
+    document.getElementById('placesDeleteBtn').style.display='none';
+    document.getElementById('placesSaveBtn').style.display='block';
+
     var str='<input type="hidden" id="placeName" name="placeName" value="'+name+'">'
             +'<input type="hidden" id="positionX" name="positionX" value="'+x+'">'
             +'<input type="hidden" id="positionY" name="positionY" value="'+y+'">';
-        if(placeMemo!=''){
-            str +='<input type="hidden" id="id" name="id" value="'+placeMemo.id+'">';
-        }
 
     document.getElementById('placeInformation').innerHTML=str;
     myModal.toggle();
+
+}
+function updatePlace(id){
+    var userCheck=document.getElementById('userCheck').value;
+    if(userCheck=='0'){
+        location.href="/member/login";
+    }
+    $.ajax({
+        type:'GET',
+        url:'/api/v1/places/'+id,
+    }).done(function(data){
+        document.getElementById('staticBackdropLabel').innerHTML=data.placeName;
+        document.getElementById('content').value=data.content;
+        document.getElementById('placesSaveBtn').style.display='none';
+        document.getElementById('placesUpdateBtn').style.display='block';
+        document.getElementById('placesDeleteBtn').style.display='block';
+
+        var str='<input type="hidden" id="placeName" name="placeName" value="'+data.placeName+'">'
+                    +'<input type="hidden" id="positionX" name="positionX" value="'+data.positionX+'">'
+                    +'<input type="hidden" id="positionY" name="positionY" value="'+data.positionY+'">'
+                    +'<input type="hidden" id="id" name="id" value="'+data.id+'">';
+
+        document.getElementById('placeInformation').innerHTML=str;
+        myModal.toggle();
+    }).fail(function(error){
+              console.log( "Ajax failed: " + error['responseText'] );
+    });
+
 
 }
 // 검색결과 항목을 Element로 반환하는 함수입니다
@@ -354,17 +380,4 @@ function removeAllChildNods(el) {
 
 
 
-function findPlace(x,y){
-    var result;
-  $.ajax({
-        type:'GET',
-        url:'/api/v1/'+x+'/'+y,
-        async:false,
-    }).done(function(data){
-        console.log(data);
-        result=data;
-    }).fail(function(request, status, error){
-        console.log( "code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-    });
-    return result;
-}
+

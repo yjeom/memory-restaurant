@@ -12,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -52,12 +49,18 @@ public class PlacesService {
         return placesRepository.findByPositionXAndPositionYOrderByIdDesc(positionX,positionY,pageable);
     }
 
+    @Transactional(readOnly = true)
+    public Places getPlace(Long id){
+        Places places=placesRepository.findById(id)
+                .orElseThrow(()->new IllegalArgumentException("해당 내역이 존재하지 않습니다."));
+        return places;
+    }
     @Transactional
-    public Long update(Long id, PlacesUpdateRequestDto requestDto){
+    public Places update(Long id, PlacesUpdateRequestDto requestDto){
         Places places=placesRepository.findById(id)
                 .orElseThrow(()->new IllegalArgumentException("해당 내역이 존재하지 않습니다."));
         places.update(requestDto.getContent());
-        return id;
+        return places;
     }
 
     @Transactional
