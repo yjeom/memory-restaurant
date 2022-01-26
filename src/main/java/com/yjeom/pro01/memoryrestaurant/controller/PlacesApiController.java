@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -37,8 +39,9 @@ public class PlacesApiController {
     }
 
     @PostMapping("/api/v1/places")
-    public Long save(@RequestBody PlacesSaveRequestDto requestDto){
-        return placesService.save(requestDto);
+    public Long save(@RequestBody PlacesSaveRequestDto requestDto, Principal principal){
+        String email=principal.getName();
+        return placesService.save(requestDto,email);
     }
 
     @ResponseBody

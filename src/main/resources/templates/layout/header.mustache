@@ -31,13 +31,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/member/login">Login</a>
                 </li>
-                <input type="hidden" id="userCheck" value="false">
+                <input type="hidden" id="userCheck" value="0">
                 {{/user}}
                 {{#user}}
                     <li class="nav-item">
                         <a class="nav-link" href="/member/logout">Logout</a>
                     </li>
-                    <input type="hidden" id="userCheck" value="true">
+                    <input type="hidden" id="userCheck" value="{{id}}">
                 {{/user}}
                 <li class="nav-item">
                     <a class="nav-link" href="member/new">SignUp</a>

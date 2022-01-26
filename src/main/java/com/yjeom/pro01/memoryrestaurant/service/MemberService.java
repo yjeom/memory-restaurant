@@ -61,7 +61,8 @@ public class MemberService implements UserDetailsService , AuthenticationSuccess
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         HttpSession session=request.getSession();
-        session.setAttribute("user",authentication.getName());
+        Member member=memberRepository.findByEmail(authentication.getName());
+        session.setAttribute("user",member);
         response.sendRedirect("/");
 
     }

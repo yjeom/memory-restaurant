@@ -220,7 +220,7 @@ function displayPlaces(places) {
 // 음식점 메모 기록창 열기
 function writePlace(name,x,y){
     var userCheck=document.getElementById('userCheck').value;
-    if(userCheck=='false'){
+    if(userCheck=='0'){
         location.href="/member/login";
     }
     var placeMemo='';

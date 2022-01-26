@@ -1,5 +1,6 @@
 package com.yjeom.pro01.memoryrestaurant.dto;
 
+import com.yjeom.pro01.memoryrestaurant.domain.Member;
 import com.yjeom.pro01.memoryrestaurant.domain.Places;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,13 +15,15 @@ public class PlacesSaveRequestDto {
     private String content;
     private double positionX;
     private double positionY;
+    private Member member;
 
     @Builder
-    public PlacesSaveRequestDto(String placeName,String content,double positionX,double positionY){
+    public PlacesSaveRequestDto(String placeName,String content,double positionX,double positionY,Member member){
         this.placeName=placeName;
         this.content=content;
         this.positionX=positionX;
         this.positionY=positionY;
+        this.member=member;
     }
 
     public Places toEntity(){
@@ -29,6 +32,7 @@ public class PlacesSaveRequestDto {
                 .content(content)
                 .positionX(positionX)
                 .positionY(positionY)
+                .member(member)
                 .build();
     }
 }

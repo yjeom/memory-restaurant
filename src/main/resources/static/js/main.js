@@ -5,6 +5,10 @@ $('#placesSaveBtn').on('click',function(){
         positionX:$('#positionX').val(),
         positionY:$('#positionY').val(),
     };
+    if(data.content==null||data.content.trim()==''){
+        alert("내용을 작성해주세요.");
+        return;
+    }
     $.ajax({
         type:'POST',
         url:'/api/v1/places',

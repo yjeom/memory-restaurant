@@ -31,12 +31,17 @@ public class Places {
     @Column(nullable = false)
     private double positionY;
 
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @Builder
-    public Places(String placeName,String content,double positionX,double positionY){
+    public Places(String placeName,String content,double positionX,double positionY,Member member){
         this.placeName=placeName;
         this.content=content;
         this.positionX=positionX;
         this.positionY=positionY;
+        this.member=member;
     }
 
     public void update(String content){

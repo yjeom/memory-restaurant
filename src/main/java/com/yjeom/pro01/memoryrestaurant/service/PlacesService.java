@@ -1,6 +1,8 @@
 package com.yjeom.pro01.memoryrestaurant.service;
 
+import com.yjeom.pro01.memoryrestaurant.domain.Member;
 import com.yjeom.pro01.memoryrestaurant.domain.Places;
+import com.yjeom.pro01.memoryrestaurant.repository.MemberRepository;
 import com.yjeom.pro01.memoryrestaurant.repository.PlacesRepository;
 import com.yjeom.pro01.memoryrestaurant.dto.PlacesSaveRequestDto;
 import com.yjeom.pro01.memoryrestaurant.dto.PlacesUpdateRequestDto;
@@ -19,9 +21,12 @@ import java.util.List;
 @Service
 public class PlacesService {
     private final PlacesRepository placesRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public long save(PlacesSaveRequestDto requestDto){
+    public long save(PlacesSaveRequestDto requestDto,String email){
+        Member member=memberRepository.findByEmail(email);
+        requestDto.setMember(member);
         return placesRepository.save(requestDto.toEntity()).getId();
     }
 
