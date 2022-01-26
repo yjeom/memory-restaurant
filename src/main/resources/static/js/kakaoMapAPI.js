@@ -103,6 +103,9 @@ function placeMarkerClick(x,y,placeName,page){
      document.getElementById('searchListDiv').style.display='none';
      document.getElementById('placeMemoListDiv').style.display='block';
      document.getElementById('placeTitle').innerHTML=placeName;
+     document.getElementById('placeName').value=placeName;
+     document.getElementById('placeX').value=x;
+     document.getElementById('placeY').value=y;
 
      var userCheck=document.getElementById('userCheck').value;
       $.ajax({
@@ -224,55 +227,7 @@ function displayPlaces(places) {
     map.setBounds(bounds);
 
 }
-    var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
-// 음식점 메모 기록창 열기
-function writePlace(name,x,y){
-    var userCheck=document.getElementById('userCheck').value;
-    if(userCheck=='0'){
-        location.href="/member/login";
-    }
-    document.getElementById('staticBackdropLabel').innerHTML=name;
-    document.getElementById('content').value='';
-    document.getElementById('placesUpdateBtn').style.display='none'
-    document.getElementById('placesDeleteBtn').style.display='none';
-    document.getElementById('placesSaveBtn').style.display='block';
 
-    var str='<input type="hidden" id="placeName" name="placeName" value="'+name+'">'
-            +'<input type="hidden" id="positionX" name="positionX" value="'+x+'">'
-            +'<input type="hidden" id="positionY" name="positionY" value="'+y+'">';
-
-    document.getElementById('placeInformation').innerHTML=str;
-    myModal.toggle();
-
-}
-function updatePlace(id){
-    var userCheck=document.getElementById('userCheck').value;
-    if(userCheck=='0'){
-        location.href="/member/login";
-    }
-    $.ajax({
-        type:'GET',
-        url:'/api/v1/places/'+id,
-    }).done(function(data){
-        document.getElementById('staticBackdropLabel').innerHTML=data.placeName;
-        document.getElementById('content').value=data.content;
-        document.getElementById('placesSaveBtn').style.display='none';
-        document.getElementById('placesUpdateBtn').style.display='block';
-        document.getElementById('placesDeleteBtn').style.display='block';
-
-        var str='<input type="hidden" id="placeName" name="placeName" value="'+data.placeName+'">'
-                    +'<input type="hidden" id="positionX" name="positionX" value="'+data.positionX+'">'
-                    +'<input type="hidden" id="positionY" name="positionY" value="'+data.positionY+'">'
-                    +'<input type="hidden" id="id" name="id" value="'+data.id+'">';
-
-        document.getElementById('placeInformation').innerHTML=str;
-        myModal.toggle();
-    }).fail(function(error){
-              console.log( "Ajax failed: " + error['responseText'] );
-    });
-
-
-}
 // 검색결과 항목을 Element로 반환하는 함수입니다
 function getListItem(index, places) {
 

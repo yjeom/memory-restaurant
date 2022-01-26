@@ -1,3 +1,5 @@
+var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+
 $('#placesSaveBtn').on('click',function(){
     var data={
         placeName:$('#placeName').val(),
@@ -49,6 +51,57 @@ $('#placesUpdateBtn').on('click',function(){
 $('#placesDeleteBtn').on('click',function(){
 
     var id=$('#id').val();
+    deletePlace(id);
+
+})
+// 음식점 메모 기록창 열기
+function writePlace(name,x,y){
+    var userCheck=document.getElementById('userCheck').value;
+    if(userCheck=='0'){
+        location.href="/member/login";
+    }
+    document.getElementById('staticBackdropLabel').innerHTML=name;
+    document.getElementById('content').value='';
+    document.getElementById('placesUpdateBtn').style.display='none'
+    document.getElementById('placesDeleteBtn').style.display='none';
+    document.getElementById('placesSaveBtn').style.display='block';
+
+    var str='<input type="hidden" id="placeName" name="placeName" value="'+name+'">'
+            +'<input type="hidden" id="positionX" name="positionX" value="'+x+'">'
+            +'<input type="hidden" id="positionY" name="positionY" value="'+y+'">';
+
+    document.getElementById('placeInformation').innerHTML=str;
+    myModal.toggle();
+
+}
+function updatePlace(id){
+    var userCheck=document.getElementById('userCheck').value;
+    if(userCheck=='0'){
+        location.href="/member/login";
+    }
+    $.ajax({
+        type:'GET',
+        url:'/api/v1/places/'+id,
+    }).done(function(data){
+        document.getElementById('staticBackdropLabel').innerHTML=data.placeName;
+        document.getElementById('content').value=data.content;
+        document.getElementById('placesSaveBtn').style.display='none';
+        document.getElementById('placesUpdateBtn').style.display='block';
+        document.getElementById('placesDeleteBtn').style.display='block';
+
+        var str='<input type="hidden" id="placeName" name="placeName" value="'+data.placeName+'">'
+                    +'<input type="hidden" id="positionX" name="positionX" value="'+data.positionX+'">'
+                    +'<input type="hidden" id="positionY" name="positionY" value="'+data.positionY+'">'
+                    +'<input type="hidden" id="id" name="id" value="'+data.id+'">';
+
+        document.getElementById('placeInformation').innerHTML=str;
+        myModal.toggle();
+    }).fail(function(error){
+              console.log( "Ajax failed: " + error['responseText'] );
+    });
+}
+function deletePlace(id){
+
     $.ajax({
         type:'DELETE',
         url:'/api/v1/places/'+id,
@@ -56,8 +109,15 @@ $('#placesDeleteBtn').on('click',function(){
         contentType: 'application/json; charset=utf-8',
     }).done(function(){
         alert('글이 삭제되었습니다.');
+        if(myModal._isShown){
          myModal.toggle();
+        }
+        var page=$('#memoCurPage').val();
+        var x=$('#placeX').val();
+        var y=$('#placeY').val();
+        var placeName=$('#placeName').val();
+        placeMarkerClick(x,y,placeName,page);
     }).fail(function(error){
         console.log( "Ajax failed: " + error['responseText'] );
     });
-})
+}
