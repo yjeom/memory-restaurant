@@ -13,3 +13,12 @@
 .fieldError{
     color: #bd2130;
 }
+.updateATag{
+    color:orange;
+    text-decoration: none;
+}
+.deleteATag{
+    color:red;
+    text-decoration: none;
+    margin-left: 0.5rem;
+}

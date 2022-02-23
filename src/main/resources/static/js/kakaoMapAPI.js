@@ -115,14 +115,18 @@ function placeMarkerClick(x,y,placeName,page){
             var arr=data.content;
             var list='';
             for(var i=0;i<arr.length;i++){
-                list +='<li class="list-group-item">'+arr[i].content;
+                list +='<li class="list-group-item">'
+                        +'<div class="container overflow-hidden p-0">'
+                        +'<div class="row g-0"><div class="col-sm-6 col-md-8">'
+                        +arr[i].content+'</div>';
                 if(userCheck==arr[i].member.id){
-                    list+='<a class="" onClick="updatePlace('+arr[i].id+')">수정하기</a>'
-                    +'<a class="" onClick="deletePlace('+arr[i].id+')">삭제하기</a>'
+                    list+='<div class="col-6 col-md-4">'
+                    +'<a class="updateATag" onClick="updatePlace('+arr[i].id+')">수정하기</a>'
+                    +'<a class="deleteATag" onClick="deletePlace('+arr[i].id+')">삭제하기</a>'
 
                 }
 
-                list+='</li>';
+                list+='</div></li>';
             }
             document.getElementById('placeMemoListUl').innerHTML=list;
 
