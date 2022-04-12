@@ -1,11 +1,10 @@
 package com.yjeom.pro01.memoryrestaurant.service;
 
 import com.yjeom.pro01.memoryrestaurant.domain.Member;
-import com.yjeom.pro01.memoryrestaurant.domain.Places;
+import com.yjeom.pro01.memoryrestaurant.domain.Place;
 import com.yjeom.pro01.memoryrestaurant.repository.MemberRepository;
-import com.yjeom.pro01.memoryrestaurant.repository.PlacesRepository;
+import com.yjeom.pro01.memoryrestaurant.repository.PlaceRepository;
 import com.yjeom.pro01.memoryrestaurant.dto.PlacesSaveRequestDto;
-import com.yjeom.pro01.memoryrestaurant.dto.PlacesUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,20 +15,20 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class PlacesService {
-    private final PlacesRepository placesRepository;
+public class PlaceService {
+    private final PlaceRepository placeRepository;
     private final MemberRepository memberRepository;
 
-    @Transactional
-    public long save(PlacesSaveRequestDto requestDto,String email){
-        Member member=memberRepository.findByEmail(email);
-        requestDto.setMember(member);
-        return placesRepository.save(requestDto.toEntity()).getId();
-    }
+//    @Transactional
+//    public long save(PlacesSaveRequestDto requestDto,String email){
+//        Member member=memberRepository.findByEmail(email);
+//        requestDto.setMember(member);
+////        return placeRepository.save(requestDto.toEntity()).getId();
+//    }
 
     @Transactional(readOnly = true)
-    public List<Places> getList(HashMap<String,Double> data){
-        List<Places> list=placesRepository.getBoundPlaceList(data.get("sw_x"),data.get("sw_y")
+    public List<Place> getList(HashMap<String,Double> data){
+        List<Place> list= placeRepository.getBoundPlaceList(data.get("sw_x"),data.get("sw_y")
                 ,data.get("ne_x"),data.get("ne_y"));
         List<String> duplication=new ArrayList<>();
         if(!list.isEmpty()){
@@ -45,29 +44,22 @@ public class PlacesService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Places> getList(double positionX, double positionY, Pageable pageable){
-        return placesRepository.findByPositionXAndPositionYOrderByIdDesc(positionX,positionY,pageable);
+    public Page<Place> getList(double positionX, double positionY, Pageable pageable){
+        return placeRepository.findByPositionXAndPositionYOrderByIdDesc(positionX,positionY,pageable);
     }
 
     @Transactional(readOnly = true)
-    public Places getPlace(Long id){
-        Places places=placesRepository.findById(id)
+    public Place getPlace(Long id){
+        Place place = placeRepository.findById(id)
                 .orElseThrow(()->new IllegalArgumentException("해당 내역이 존재하지 않습니다."));
-        return places;
-    }
-    @Transactional
-    public Places update(Long id, PlacesUpdateRequestDto requestDto){
-        Places places=placesRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("해당 내역이 존재하지 않습니다."));
-        places.update(requestDto.getContent());
-        return places;
+        return place;
     }
 
     @Transactional
     public Long delete(Long id){
-        Places places=placesRepository.findById(id)
+        Place place = placeRepository.findById(id)
                 .orElseThrow(()->new IllegalArgumentException("해당 내역이 존재하지 않습니다."));
-        placesRepository.delete(places);
+        placeRepository.delete(place);
         return id;
     }
 }

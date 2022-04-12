@@ -1,7 +1,7 @@
 package com.yjeom.pro01.memoryrestaurant.dto;
 
 import com.yjeom.pro01.memoryrestaurant.domain.Member;
-import com.yjeom.pro01.memoryrestaurant.domain.Places;
+import com.yjeom.pro01.memoryrestaurant.domain.Place;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,13 +26,11 @@ public class PlacesSaveRequestDto {
         this.member=member;
     }
 
-    public Places toEntity(){
-        return Places.builder()
-                .placeName(placeName)
-                .content(content)
-                .positionX(positionX)
-                .positionY(positionY)
-                .member(member)
-                .build();
-    }
+//    public Place toEntity(){
+//        return Place.builder()
+//                .placeName(placeName)
+//                .positionX(positionX)
+//                .positionY(positionY)
+//                .build();
+//    }
 }
