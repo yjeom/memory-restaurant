@@ -3,15 +3,21 @@ package com.yjeom.pro01.memoryrestaurant.service;
 import com.yjeom.pro01.memoryrestaurant.domain.MemoImg;
 import com.yjeom.pro01.memoryrestaurant.domain.Place;
 import com.yjeom.pro01.memoryrestaurant.domain.PlaceMemo;
+import com.yjeom.pro01.memoryrestaurant.dto.PlaceMemoDto;
 import com.yjeom.pro01.memoryrestaurant.repository.PlaceMemoRepository;
 import com.yjeom.pro01.memoryrestaurant.repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 @Transactional
@@ -22,19 +28,45 @@ public class PlaceMemoService {
     private final PlaceMemoRepository placeMemoRepository;
     private final PlaceRepository placeRepository;
 
-    public Long savePlaceMemo(HashMap<String, Object> memo, HashMap<String, Object> place,
+    public Long savePlaceMemo(HashMap<String, Object> memoMap, HashMap<String, Object> placeMap,
                               MultipartFile file)throws Exception{
-        Place p=Place.createPlace(place.get("place_name").toString(),
-                Double.parseDouble(place.get("x").toString()),
-                Double.parseDouble(place.get("y").toString()));
-        placeRepository.save(p);
+        Place place=placeRepository.findByApiId(Long.parseLong(placeMap.get("id").toString()));
+        if(place==null){
+            place=Place.builder()
+                    .placeName(placeMap.get("place_name").toString())
+                    .apiId(Long.parseLong(placeMap.get("id").toString()))
+                    .positionX(Double.parseDouble(placeMap.get("x").toString()))
+                    .positionY(Double.parseDouble(placeMap.get("y").toString()))
+                    .build();
+            placeRepository.save(place);
+        }
         MemoImg memoImg=new MemoImg();
         memoImgService.saveMemoImg(memoImg,file);
-        PlaceMemo placeMemo= PlaceMemo.createPlaceMemo(p,memoImg,
-                Double.parseDouble(memo.get("rating").toString()),memo.get("content").toString());
+        PlaceMemo placeMemo= PlaceMemo.createPlaceMemo(place,memoImg,
+                Double.parseDouble(memoMap.get("rating").toString()),memoMap.get("content").toString());
 
         placeMemoRepository.save(placeMemo);
         return placeMemo.getId();
 
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PlaceMemoDto> getPlaceMemoList(Long placeApiId,Pageable pageable){
+        Place place=placeRepository.findByApiId(placeApiId);
+        if(place==null) return null;
+        List<PlaceMemo> placeMemoList= placeMemoRepository.findByPlaceId(place.getId());
+        List<PlaceMemoDto> placeMemoDtos=new ArrayList<>();
+        Long totalCount=placeMemoRepository.countPlaceMemo(place.getId());
+        for(PlaceMemo placeMemo: placeMemoList){
+            MemoImg memoImg= placeMemo.getMemoImg();
+            PlaceMemoDto placeMemoDto=PlaceMemoDto.builder()
+                    .placeMemo(placeMemo)
+                    .memoImg(memoImg)
+                    .place(place)
+                    .build();
+
+            placeMemoDtos.add(placeMemoDto);
+        }
+        return new PageImpl<PlaceMemoDto>(placeMemoDtos,pageable,totalCount);
     }
 }

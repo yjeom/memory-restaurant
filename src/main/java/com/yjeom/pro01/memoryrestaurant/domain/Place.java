@@ -16,6 +16,8 @@ public class Place {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long apiId;
+
     @Column(length = 500,nullable = false)
     private String placeName;
 
@@ -32,12 +34,12 @@ public class Place {
 //    @JoinColumn(name = "member_id")
 //    private Member member;
 
- public static Place createPlace(String placeName,double positionX,double positionY){
-     Place place=new Place();
-     place.setPlaceName(placeName);
-     place.setPositionX(positionX);
-     place.setPositionY(positionY);
-     return  place;
+    @Builder
+ public Place(String placeName,Long apiId,double positionX,double positionY){
+    this.placeName=placeName;
+    this.apiId=apiId;
+    this.positionX=positionX;
+    this.positionY=positionY;
  }
 
 //    public void update(String content){

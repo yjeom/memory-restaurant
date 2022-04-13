@@ -1,15 +1,20 @@
 package com.yjeom.pro01.memoryrestaurant.controller;
 import com.yjeom.pro01.memoryrestaurant.domain.MemoImg;
 import com.yjeom.pro01.memoryrestaurant.domain.Place;
+import com.yjeom.pro01.memoryrestaurant.dto.PlaceMemoDto;
 import com.yjeom.pro01.memoryrestaurant.service.MemoImgService;
 import com.yjeom.pro01.memoryrestaurant.service.PlaceMemoService;
 import com.yjeom.pro01.memoryrestaurant.service.PlaceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,12 +30,23 @@ public class PlaceMemoApiController {
         return model;
 
     }
-    @PostMapping("/memo")
-    public void test(@RequestPart(value = "memo",required = false) HashMap<String, Object> memo,
+    @PostMapping("/placeMemo")
+    public void addPlaceMemo(@RequestPart(value = "memo",required = false) HashMap<String, Object> memo,
                      @RequestPart(value = "place",required = false) HashMap<String, Object> place,
                      @RequestPart(value="imgFile", required=false) MultipartFile file) throws Exception {
+        System.out.println(place);
         placeMemoService.savePlaceMemo(memo,place,file);
 
+    }
+
+
+    @GetMapping("/placeMemoList/{placeApiId}/{page}")
+    public  @ResponseBody Page<PlaceMemoDto> getPlaceMemoList(@PathVariable Long placeApiId,
+                                                              @PathVariable("page") Optional<Integer> page
+                                                              ){
+        Pageable pageable= PageRequest.of(page.isPresent()?page.get():0,4);
+
+        return placeMemoService.getPlaceMemoList(placeApiId,pageable);
     }
 //
 //    @ResponseBody

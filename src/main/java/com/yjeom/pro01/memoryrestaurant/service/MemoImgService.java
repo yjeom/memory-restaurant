@@ -33,4 +33,9 @@ public class MemoImgService {
         memoImg.updateMemoImg(oriImgName,imgName,imgUrl);
         memoImgRepository.save(memoImg);
     }
+
+    public MemoImg getMemoImg(Long id){
+        MemoImg memoImg=memoImgRepository.getById(id);
+        return memoImg;
+    }
 }

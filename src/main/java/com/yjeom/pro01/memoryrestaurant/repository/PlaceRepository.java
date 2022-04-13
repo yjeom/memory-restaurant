@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface PlaceRepository extends JpaRepository<Place,Long> , PlaceRepositoryCustom {
 
+    Place findByApiId(Long apiId);
+
     @Query(value = "SELECT p.* FROM PLACES p "
             +"WHERE p.positionX = :positionX "
             +"AND p.positionY= :positionY "
