@@ -1,7 +1,7 @@
 package com.yjeom.pro01.memoryrestaurant.controller;
 
-import com.yjeom.pro01.memoryrestaurant.domain.Places;
-import com.yjeom.pro01.memoryrestaurant.repository.PlacesRepository;
+import com.yjeom.pro01.memoryrestaurant.domain.Place;
+import com.yjeom.pro01.memoryrestaurant.repository.PlaceRepository;
 import com.yjeom.pro01.memoryrestaurant.dto.PlacesSaveRequestDto;
 import org.junit.After;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PlacesApiControllerTest {
+public class PlaceMemoApiControllerTest {
 
     @LocalServerPort
     private int port;
@@ -29,11 +29,11 @@ public class PlacesApiControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private PlacesRepository placesRepository;
+    private PlaceRepository placeRepository;
 
     @After
     public void tearDown() throws Exception{
-        placesRepository.deleteAll();
+        placeRepository.deleteAll();
     }
 
     @Test
@@ -54,7 +54,7 @@ public class PlacesApiControllerTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
-        List<Places> all= placesRepository.findAll();
+        List<Place> all= placeRepository.findAll();
         assertThat(all.get(0).getPlaceName()).isEqualTo(placeName);
         assertThat(all.get(0).getContent()).isEqualTo(content);
     }

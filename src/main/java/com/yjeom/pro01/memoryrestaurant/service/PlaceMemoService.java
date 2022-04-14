@@ -51,12 +51,11 @@ public class PlaceMemoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PlaceMemoDto> getPlaceMemoList(Long placeApiId,Pageable pageable){
+    public List<PlaceMemoDto> getPlaceMemoList(Long placeApiId){
         Place place=placeRepository.findByApiId(placeApiId);
         if(place==null) return null;
-        List<PlaceMemo> placeMemoList= placeMemoRepository.findByPlaceId(place.getId());
+        List<PlaceMemo> placeMemoList= placeMemoRepository.findByPlaceIdOrderByIdDesc(place.getId());
         List<PlaceMemoDto> placeMemoDtos=new ArrayList<>();
-        Long totalCount=placeMemoRepository.countPlaceMemo(place.getId());
         for(PlaceMemo placeMemo: placeMemoList){
             MemoImg memoImg= placeMemo.getMemoImg();
             PlaceMemoDto placeMemoDto=PlaceMemoDto.builder()
@@ -67,6 +66,6 @@ public class PlaceMemoService {
 
             placeMemoDtos.add(placeMemoDto);
         }
-        return new PageImpl<PlaceMemoDto>(placeMemoDtos,pageable,totalCount);
+        return placeMemoDtos;
     }
 }

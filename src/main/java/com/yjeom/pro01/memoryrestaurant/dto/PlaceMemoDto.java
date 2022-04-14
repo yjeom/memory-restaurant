@@ -35,7 +35,7 @@ public class PlaceMemoDto {
     @Builder
     public PlaceMemoDto(PlaceMemo placeMemo, Place place, MemoImg memoImg){
         this.placeMemoId=placeMemo.getId();
-        this.regDate=placeMemo.getRegTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH;dd"));
+        this.regDate=placeMemo.getRegTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:dd"));
         this.imgUrl=memoImg.getImgUrl();
         this.rating=placeMemo.getRating();
         this.content=placeMemo.getContent();
