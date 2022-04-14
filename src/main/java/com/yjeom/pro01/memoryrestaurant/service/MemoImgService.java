@@ -28,7 +28,7 @@ public class MemoImgService {
 
         if(!String.valueOf(oriImgName).isEmpty()){
             imgName=fileService.uploadFile(memoImgLocation,oriImgName,memoImgFile.getBytes());
-            imgUrl="/images/memo/"+imgName;
+            imgUrl="/images/img/memo/"+imgName;
         }
         memoImg.updateMemoImg(oriImgName,imgName,imgUrl);
         memoImgRepository.save(memoImg);
