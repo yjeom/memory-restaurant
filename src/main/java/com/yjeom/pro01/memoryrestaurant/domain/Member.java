@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "member")
+@Table(name = "member",uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

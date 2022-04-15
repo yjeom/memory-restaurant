@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService implements UserDetailsService , AuthenticationSuccessHandler {
+public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
@@ -37,6 +38,13 @@ public class MemberService implements UserDetailsService , AuthenticationSuccess
         }
     }
 
+    public Member validateExistsMember(String email, String password, PasswordEncoder passwordEncoder){
+        Member member=memberRepository.findByEmail(email);
+        if(member !=null && passwordEncoder.matches(password, member.getPassword())){
+            return member;
+        }
+        return null;
+    }
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member=memberRepository.findByEmail(email);
@@ -51,19 +59,19 @@ public class MemberService implements UserDetailsService , AuthenticationSuccess
                 .build();
     }
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        AuthenticationSuccessHandler.super.onAuthenticationSuccess(request, response, chain, authentication);
-    }
-
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
-        HttpSession session=request.getSession();
-        Member member=memberRepository.findByEmail(authentication.getName());
-        session.setAttribute("user",member);
-        response.sendRedirect("/");
-
-    }
+//    @Override
+//    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+//        AuthenticationSuccessHandler.super.onAuthenticationSuccess(request, response, chain, authentication);
+//    }
+////
+//    @Override
+//    public void onAuthenticationSuccess(HttpServletRequest request,
+//                                        HttpServletResponse response,
+//                                        Authentication authentication) throws IOException, ServletException {
+//        HttpSession session=request.getSession();
+//        Member member=memberRepository.findByEmail(authentication.getName());
+//        session.setAttribute("user",member);
+//        response.sendRedirect("/");
+//
+//    }
 }
