@@ -28,7 +28,7 @@ public class PlaceMemoService {
     private final PlaceMemoRepository placeMemoRepository;
     private final PlaceRepository placeRepository;
 
-    public Long savePlaceMemo(HashMap<String, Object> memoMap, HashMap<String, Object> placeMap,
+    public PlaceMemoDto savePlaceMemo(HashMap<String, Object> memoMap, HashMap<String, Object> placeMap,
                               MultipartFile file)throws Exception{
         Place place=placeRepository.findByApiId(Long.parseLong(placeMap.get("id").toString()));
         if(place==null){
@@ -45,8 +45,13 @@ public class PlaceMemoService {
         PlaceMemo placeMemo= PlaceMemo.createPlaceMemo(place,memoImg,
                 Double.parseDouble(memoMap.get("rating").toString()),memoMap.get("content").toString());
 
-        placeMemoRepository.save(placeMemo);
-        return placeMemo.getId();
+        PlaceMemo savedPlaceMemo=placeMemoRepository.save(placeMemo);
+        PlaceMemoDto placeMemoDto=PlaceMemoDto.builder()
+                .place(savedPlaceMemo.getPlace())
+                .memoImg(savedPlaceMemo.getMemoImg())
+                .placeMemo(savedPlaceMemo)
+                .build();
+        return placeMemoDto;
 
     }
 

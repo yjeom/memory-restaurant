@@ -1,9 +1,11 @@
 package com.yjeom.pro01.memoryrestaurant.controller;
 import com.yjeom.pro01.memoryrestaurant.dto.PlaceMemoDto;
+import com.yjeom.pro01.memoryrestaurant.dto.ResponseDto;
 import com.yjeom.pro01.memoryrestaurant.service.MemoImgService;
 import com.yjeom.pro01.memoryrestaurant.service.PlaceMemoService;
 import com.yjeom.pro01.memoryrestaurant.service.PlaceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,11 +28,19 @@ public class PlaceMemoApiController {
 //
 //    }
     @PostMapping("/placeMemo")
-    public void addPlaceMemo(@RequestPart(value = "memo",required = false) HashMap<String, Object> memo,
-                     @RequestPart(value = "place",required = false) HashMap<String, Object> place,
-                     @RequestPart(value="imgFile", required=false) MultipartFile file) throws Exception {
-        System.out.println(place);
-        placeMemoService.savePlaceMemo(memo,place,file);
+    public ResponseEntity<?> addPlaceMemo(@RequestPart(value = "memo",required = false) HashMap<String, Object> memo,
+                                          @RequestPart(value = "place",required = false) HashMap<String, Object> place,
+                                          @RequestPart(value="imgFile", required=false) MultipartFile file)  {
+        try {
+            System.out.println(place);
+            PlaceMemoDto placeMemoDto=placeMemoService.savePlaceMemo(memo, place, file);
+            return ResponseEntity.ok().body(placeMemoDto);
+        }catch (Exception e){
+            ResponseDto responseDto=ResponseDto.builder()
+                    .error(e.getMessage())
+                    .build();
+            return ResponseEntity.badRequest().body(responseDto);
+        }
 
     }
 
