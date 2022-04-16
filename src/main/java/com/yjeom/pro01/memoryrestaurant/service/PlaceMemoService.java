@@ -1,5 +1,6 @@
 package com.yjeom.pro01.memoryrestaurant.service;
 
+import com.yjeom.pro01.memoryrestaurant.domain.Member;
 import com.yjeom.pro01.memoryrestaurant.domain.MemoImg;
 import com.yjeom.pro01.memoryrestaurant.domain.Place;
 import com.yjeom.pro01.memoryrestaurant.domain.PlaceMemo;
@@ -29,7 +30,7 @@ public class PlaceMemoService {
     private final PlaceRepository placeRepository;
 
     public PlaceMemoDto savePlaceMemo(HashMap<String, Object> memoMap, HashMap<String, Object> placeMap,
-                              MultipartFile file)throws Exception{
+                                      MultipartFile file, Member member)throws Exception{
         Place place=placeRepository.findByApiId(Long.parseLong(placeMap.get("id").toString()));
         if(place==null){
             place=Place.builder()
@@ -42,14 +43,20 @@ public class PlaceMemoService {
         }
         MemoImg memoImg=new MemoImg();
         memoImgService.saveMemoImg(memoImg,file);
-        PlaceMemo placeMemo= PlaceMemo.createPlaceMemo(place,memoImg,
-                Double.parseDouble(memoMap.get("rating").toString()),memoMap.get("content").toString());
+        PlaceMemo placeMemo= PlaceMemo.builder()
+                .place(place)
+                .memoImg(memoImg)
+                .rating(Double.parseDouble(memoMap.get("rating").toString()))
+                .content(memoMap.get("content").toString())
+                .member(member)
+                .build();
 
         PlaceMemo savedPlaceMemo=placeMemoRepository.save(placeMemo);
         PlaceMemoDto placeMemoDto=PlaceMemoDto.builder()
                 .place(savedPlaceMemo.getPlace())
                 .memoImg(savedPlaceMemo.getMemoImg())
                 .placeMemo(savedPlaceMemo)
+                .member(savedPlaceMemo.getMember())
                 .build();
         return placeMemoDto;
 
@@ -67,6 +74,7 @@ public class PlaceMemoService {
                     .placeMemo(placeMemo)
                     .memoImg(memoImg)
                     .place(place)
+                    .member(placeMemo.getMember())
                     .build();
 
             placeMemoDtos.add(placeMemoDto);

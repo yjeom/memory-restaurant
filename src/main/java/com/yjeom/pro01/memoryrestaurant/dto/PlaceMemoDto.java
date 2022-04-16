@@ -1,5 +1,6 @@
 package com.yjeom.pro01.memoryrestaurant.dto;
 
+import com.yjeom.pro01.memoryrestaurant.domain.Member;
 import com.yjeom.pro01.memoryrestaurant.domain.MemoImg;
 import com.yjeom.pro01.memoryrestaurant.domain.Place;
 import com.yjeom.pro01.memoryrestaurant.domain.PlaceMemo;
@@ -32,8 +33,10 @@ public class PlaceMemoDto {
 
     private double positionY;
 
+    private String memberEmail;
+
     @Builder
-    public PlaceMemoDto(PlaceMemo placeMemo, Place place, MemoImg memoImg){
+    public PlaceMemoDto(PlaceMemo placeMemo, Place place, MemoImg memoImg, Member member){
         this.placeMemoId=placeMemo.getId();
         this.regDate=placeMemo.getRegTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:dd"));
         this.imgUrl=memoImg.getImgUrl();
@@ -43,6 +46,7 @@ public class PlaceMemoDto {
         this.placeApiId=place.getApiId();
         this.positionX=place.getPositionX();
         this.positionY=place.getPositionY();
+        this.memberEmail=member.getEmail();
 
     }
 }
