@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface PlaceMemoRepository extends JpaRepository<PlaceMemo,Long> {
     List<PlaceMemo> findByPlaceIdOrderByIdDesc(Long placesId);
+
 }

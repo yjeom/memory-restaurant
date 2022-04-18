@@ -1,5 +1,6 @@
 package com.yjeom.pro01.memoryrestaurant.controller;
 import com.yjeom.pro01.memoryrestaurant.domain.Member;
+import com.yjeom.pro01.memoryrestaurant.domain.PlaceMemo;
 import com.yjeom.pro01.memoryrestaurant.dto.PlaceMemoDto;
 import com.yjeom.pro01.memoryrestaurant.dto.ResponseDto;
 import com.yjeom.pro01.memoryrestaurant.service.MemberService;
@@ -7,15 +8,11 @@ import com.yjeom.pro01.memoryrestaurant.service.MemoImgService;
 import com.yjeom.pro01.memoryrestaurant.service.PlaceMemoService;
 import com.yjeom.pro01.memoryrestaurant.service.PlaceService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.security.SecurityUtil;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,13 +32,16 @@ public class PlaceMemoApiController {
 //
 //    }
     @PostMapping("/placeMemo")
-    public ResponseEntity<?> addPlaceMemo(@RequestPart(value = "memo",required = false) HashMap<String, Object> memo,
-                                          @RequestPart(value = "place",required = false) HashMap<String, Object> place,
-                                          @RequestPart(value="imgFile", required=false) MultipartFile file)  {
+    public ResponseEntity<?> addPlaceMemo(@RequestPart(value = "memo",required = true) HashMap<String, Object> memo,
+                                          @RequestPart(value = "place",required = true) HashMap<String, Object> place,
+                                          @RequestPart(value="imgFile", required=false) MultipartFile reqFile)  {
         try {
-            System.out.println(place);
-            System.out.println( SecurityContextHolder.getContext().getAuthentication().getName());
-
+            MultipartFile file;
+            if(reqFile==null){
+                file=null;
+            }else{
+                file=reqFile;
+            }
             String email=SecurityContextHolder.getContext().getAuthentication().getName();
             Member member=memberService.getMember(email);
             PlaceMemoDto placeMemoDto=placeMemoService.savePlaceMemo(memo, place, file,member);
@@ -62,6 +62,41 @@ public class PlaceMemoApiController {
 
         return placeMemoService.getPlaceMemoList(placeApiId);
     }
+    @PutMapping("/placeMemo")
+    public ResponseEntity<?> updatePlaceMemo(@RequestPart(value = "memo",required = true) HashMap<String, Object> memo,
+                                          @RequestPart(value="imgFile", required=false) MultipartFile reqFile) {
+        try {
+
+            PlaceMemo newPlaceMemo = placeMemoService.updatePlaceMemo(memo,reqFile);
+            PlaceMemoDto placeMemoDto=PlaceMemoDto.builder()
+                    .placeMemo(newPlaceMemo)
+                    .place(newPlaceMemo.getPlace())
+                    .memoImg(newPlaceMemo.getMemoImg())
+                    .member(newPlaceMemo.getMember())
+                    .build();
+            return ResponseEntity.ok().body(placeMemoDto);
+        } catch (Exception e) {
+            ResponseDto responseDto = ResponseDto.builder()
+                    .error(e.getMessage())
+                    .build();
+            return ResponseEntity.badRequest().body(responseDto);
+        }
+    }
+
+    @DeleteMapping(value = "/placeMemo")
+    public ResponseEntity<?> deletePlaceMemo(@RequestBody HashMap<String, Object> memo) {
+        try {
+            placeMemoService.deletePlaceMemo(Long.parseLong(memo.get("memoId").toString()));
+            return ResponseEntity.ok().body(Long.parseLong(memo.get("memoId").toString()));
+        } catch (Exception e) {
+            ResponseDto responseDto = ResponseDto.builder()
+                    .error(e.getMessage())
+                    .build();
+            return ResponseEntity.badRequest().body(responseDto);
+        }
+    }
+
+
 //
 //    @ResponseBody
 //    @PostMapping("/")

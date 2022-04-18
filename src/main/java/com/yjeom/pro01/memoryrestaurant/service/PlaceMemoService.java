@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -42,22 +43,41 @@ public class PlaceMemoService {
             placeRepository.save(place);
         }
         MemoImg memoImg=new MemoImg();
-        memoImgService.saveMemoImg(memoImg,file);
-        PlaceMemo placeMemo= PlaceMemo.builder()
-                .place(place)
-                .memoImg(memoImg)
-                .rating(Double.parseDouble(memoMap.get("rating").toString()))
-                .content(memoMap.get("content").toString())
-                .member(member)
-                .build();
-
+        PlaceMemo placeMemo;
+        if(file !=null){
+            memoImg=  memoImgService.saveMemoImg(file);
+            placeMemo= PlaceMemo.builder()
+                    .place(place)
+                    .memoImg(memoImg)
+                    .rating(Double.parseDouble(memoMap.get("rating").toString()))
+                    .content(memoMap.get("content").toString())
+                    .member(member)
+                    .build();
+        }else{
+            placeMemo= PlaceMemo.builder()
+                    .place(place)
+                    .rating(Double.parseDouble(memoMap.get("rating").toString()))
+                    .content(memoMap.get("content").toString())
+                    .member(member)
+                    .build();
+        }
         PlaceMemo savedPlaceMemo=placeMemoRepository.save(placeMemo);
-        PlaceMemoDto placeMemoDto=PlaceMemoDto.builder()
-                .place(savedPlaceMemo.getPlace())
-                .memoImg(savedPlaceMemo.getMemoImg())
-                .placeMemo(savedPlaceMemo)
-                .member(savedPlaceMemo.getMember())
-                .build();
+        PlaceMemoDto placeMemoDto;
+        if(file !=null){
+            placeMemoDto=PlaceMemoDto.builder()
+                    .place(savedPlaceMemo.getPlace())
+                    .memoImg(savedPlaceMemo.getMemoImg())
+                    .placeMemo(savedPlaceMemo)
+                    .member(savedPlaceMemo.getMember())
+                    .build();
+        }else{
+            placeMemoDto=PlaceMemoDto.builder()
+                    .place(savedPlaceMemo.getPlace())
+                    .placeMemo(savedPlaceMemo)
+                    .member(savedPlaceMemo.getMember())
+                    .build();
+        }
+
         return placeMemoDto;
 
     }
@@ -80,5 +100,29 @@ public class PlaceMemoService {
             placeMemoDtos.add(placeMemoDto);
         }
         return placeMemoDtos;
+    }
+
+    public PlaceMemo updatePlaceMemo(HashMap<String, Object> memoMap,
+                                      MultipartFile file)throws Exception{
+        Optional<PlaceMemo> placeMemo=placeMemoRepository.findById(Long.parseLong(memoMap.get("memoId").toString()));
+        if(placeMemo.isPresent()){
+            PlaceMemo newPlaceMemo=placeMemo.get();
+            MemoImg memoImg=memoImgService.updateMemoImg(newPlaceMemo,file!=null?file:null);
+            if(memoImg !=null){
+                newPlaceMemo.setMemoImg(memoImg);
+            }
+            newPlaceMemo.setContent(memoMap.get("content").toString());
+            newPlaceMemo.setRating(Double.parseDouble(memoMap.get("rating").toString()));
+            return newPlaceMemo;
+        }
+        return null;
+    }
+
+    public void deletePlaceMemo(Long memoId) throws  Exception{
+        PlaceMemo placeMemo=placeMemoRepository.findById(memoId).get();
+        if(placeMemo !=null){
+            memoImgService.deleteMemoImg(placeMemo);
+            placeMemoRepository.delete(placeMemo);
+        }
     }
 }

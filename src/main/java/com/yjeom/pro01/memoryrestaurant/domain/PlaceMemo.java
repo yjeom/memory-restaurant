@@ -21,7 +21,7 @@ public class PlaceMemo extends BaseTime{
     private Place place;
 
     @ManyToOne
-    @JoinColumn(name = "memo_img_id")
+    @JoinColumn(name = "memo_img_id",nullable = true)
     private MemoImg memoImg;
 
     @ManyToOne

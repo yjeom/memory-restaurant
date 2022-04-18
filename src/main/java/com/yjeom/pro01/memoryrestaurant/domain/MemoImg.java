@@ -26,7 +26,6 @@ public class MemoImg extends BaseTime{
 
     private String imgUrl;
 
-    //todo: memo 지금 places 와 연결
 
     public void updateMemoImg(String oriImgName,String imgName,String imgUrl){
         this.oriImgName=oriImgName;

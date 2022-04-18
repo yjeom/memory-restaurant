@@ -39,7 +39,7 @@ public class PlaceMemoDto {
     public PlaceMemoDto(PlaceMemo placeMemo, Place place, MemoImg memoImg, Member member){
         this.placeMemoId=placeMemo.getId();
         this.regDate=placeMemo.getRegTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:dd"));
-        this.imgUrl=memoImg.getImgUrl();
+        this.imgUrl=memoImg != null?memoImg.getImgUrl():null;
         this.rating=placeMemo.getRating();
         this.content=placeMemo.getContent();
         this.placeName=place.getPlaceName();

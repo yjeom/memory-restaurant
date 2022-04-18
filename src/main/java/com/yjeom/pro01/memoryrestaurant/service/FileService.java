@@ -2,6 +2,7 @@ package com.yjeom.pro01.memoryrestaurant.service;
 
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.UUID;
 
@@ -17,5 +18,12 @@ public class FileService {
         fos.write(fileData);
         fos.close();
         return savedFileName;
+    }
+
+    public void deleteFile(String filePath) throws Exception{
+        File deleteFile=new File(filePath);
+        if(deleteFile.exists()){
+            deleteFile.delete();
+        }
     }
 }
